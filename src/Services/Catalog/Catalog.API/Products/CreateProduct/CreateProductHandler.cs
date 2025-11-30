@@ -4,9 +4,9 @@ public record CreateProductCommand(string Name, List<string> Category, string De
     : ICommand<CreateProductResult>;
 public record CreateProductResult(Guid Id);
 
-public class CreateProductCommandValidatior : AbstractValidator<CreateProductCommand>
+public class CreateProductCommandValidator : AbstractValidator<CreateProductCommand>
 {
-    public CreateProductCommandValidatior()
+    public CreateProductCommandValidator()
     {
         RuleFor(x => x.Name).NotEmpty().WithMessage("Name is required!");
         RuleFor(x => x.Category).NotEmpty().WithMessage("Category is required!");
@@ -16,13 +16,12 @@ public class CreateProductCommandValidatior : AbstractValidator<CreateProductCom
 }
 
 internal class CreateProductCommandHandler
-    (IDocumentSession session,IValidator<CreateProductCommand> validator)
+    (IDocumentSession session)
     :ICommandHandler<CreateProductCommand, CreateProductResult>
 {
     public async Task<CreateProductResult> Handle(CreateProductCommand command, CancellationToken cancellationToken)
     {
         // create a product entity from command object
-
         var product = new Product
         {
             Name = command.Name, 
